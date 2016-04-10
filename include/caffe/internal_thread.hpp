@@ -1,6 +1,7 @@
 #ifndef CAFFE_INTERNAL_THREAD_HPP_
 #define CAFFE_INTERNAL_THREAD_HPP_
 
+#include <boost/thread.hpp>
 #include "caffe/common.hpp"
 
 /**
@@ -32,7 +33,16 @@ class InternalThread {
   void StopInternalThread();
 
   bool is_started() const;
-
+  bool WaitForInternalThreadToExit(){
+	   if (is_started()) {
+		      try {
+			           thread_->join();
+				      } catch (...) {
+					           return false;
+						      }
+		       }
+	    return true;
+  } 
  protected:
   /* Implement this method in your subclass
       with the code you want your thread to run. */

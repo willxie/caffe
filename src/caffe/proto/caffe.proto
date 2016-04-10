@@ -396,7 +396,25 @@ message LayerParameter {
   optional ThresholdParameter threshold_param = 128;
   optional TileParameter tile_param = 138;
   optional WindowDataParameter window_data_param = 129;
+  // Added by Jun
+//--------------------------------------------------------------------------------
+  optional AtariDataParameter atari_data_param = 201; 
+//  optional RecurrentParameter recurrent_param = 202; 
+//--------------------------------------------------------------------------------
 }
+
+// Added by Jun
+//--------------------------------------------------------------------------------
+message AtariDataParameter {
+  optional uint32 num_frame = 1; // The number of frames for input
+  optional uint32 num_act = 2; // The number of actions
+  optional uint32 channels = 3 [default = 1]; // number of channels in image 
+  optional bool streaming = 4 [default = false]; // change T times N to N times T for RNN
+  optional bool out_clip = 5 [default = false]; // load every image to memory
+  optional bool load_to_memory = 6 [default = true]; // load every image to memory
+  optional bool out_act = 7 [default = true];
+}
+//--------------------------------------------------------------------------------
 
 // Message that stores parameters used to apply transformation
 // to the data layer's data
