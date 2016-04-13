@@ -338,28 +338,12 @@ void AtariDataLayer<Dtype>::InternalThreadEntry() {
   }
 }
 
-#include <sys/stat.h>
-
-bool is_file(const char* path) {
-        struct stat buf;
-            stat(path, &buf);
-                return S_ISREG(buf.st_mode);
-}
-
-bool is_dir(const char* path) {
-        struct stat buf;
-            stat(path, &buf);
-                return S_ISDIR(buf.st_mode);
-}
-
 template <typename Dtype>
 void AtariDataLayer<Dtype>::LoadData() {
   string data_path = this->layer_param_.data_param().source();
-  path p(data_path);
   LOG(INFO) << "Opening DB : " << data_path;
-  LOG(INFO) << "...";
-  // CHECK_EQ(is_directory(p), true) 
-  //  << "Cannot Open Source : " << data_path;
+  CHECK_EQ(is_directory(data_path), true) 
+    << "Cannot Open Source : " << data_path;
 
   char buf[100];
   std::string file_path, dir_path;
@@ -368,7 +352,6 @@ void AtariDataLayer<Dtype>::LoadData() {
   int dir_idx = 0;
   int total_img = 0;
   int total_episode = 0;
-  LOG(INFO) << "...";
   while (true) {
     std::vector<Mat> imgs;
     std::vector<int> acts;
@@ -376,12 +359,10 @@ void AtariDataLayer<Dtype>::LoadData() {
     std::vector<std::vector<Dtype> > q_values;
     snprintf(buf, sizeof(buf), "%s/%04u", data_path.c_str(), dir_idx);
     dir_path = buf;
-  LOG(INFO) << "...";
 
-    if (!is_dir(data_path.c_str)) {
+    if (!is_directory(dir_path)) {
       break; 
     }
-  LOG(INFO) << "...";
     img_idx = 0;
     // Load images
     while (true) {
